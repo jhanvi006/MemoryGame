@@ -15,6 +15,15 @@
             --success-color: #4caf50;
         }
 
+        :root[data-theme="dark"] {
+            --primary-color: #64b5f6;
+            --background-color: #1a1a1a;
+            --card-back: #0d47a1;
+            --card-front: #2d2d2d;
+            --text-color: #e0e0e0;
+            --success-color: #66bb6a;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -41,11 +50,30 @@
         .header {
             text-align: center;
             margin-bottom: 2rem;
+            position: relative;
         }
 
         .header h1 {
             font-size: 2.5rem;
             margin-bottom: 0.5rem;
+        }
+
+        /* Dark mode toggle button */
+        .dark-mode-toggle {
+            position: absolute;
+            top: 0;
+            right: 0;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            transition: background-color 0.3s ease;
+        }
+
+        .dark-mode-toggle:hover {
+            background-color: var(--primary-color);
+            border-radius: 50%;
         }
 
         /* Game controls and statistics panel */
@@ -216,6 +244,7 @@
     <div class="container">
         <!-- Game header with title and instructions -->
         <header class="header">
+            <button class="dark-mode-toggle" aria-label="Toggle dark mode" title="Dark Mode">🌙</button>
             <h1>Memory Game</h1>
             <p>Match all the pairs to win! Use keyboard or mouse to play.</p>
         </header>
@@ -496,6 +525,28 @@
                     initializeGrid();
                 }
             });
+        });
+
+        // Dark mode toggle
+        const darkModeToggle = document.querySelector('.dark-mode-toggle');
+        const htmlElement = document.documentElement;
+
+        // Load saved preference
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        htmlElement.setAttribute('data-theme', savedTheme);
+        updateToggleIcon();
+
+        function updateToggleIcon() {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            darkModeToggle.textContent = currentTheme === 'dark' ? '☀️' : '🌙';
+        }
+
+        darkModeToggle.addEventListener('click', () => {
+            const currentTheme = htmlElement.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            htmlElement.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateToggleIcon();
         });
 
         // Initialize game
